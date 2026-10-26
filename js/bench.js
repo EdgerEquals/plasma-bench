@@ -240,7 +240,15 @@
     var off = $('ltOff'); if (off) off.className = 'lt' + (r ? ' bad' : a ? ' warn' : '');
   }
   function renderAll() { renderCards(); drawChain(); renderPlans(); pills(); if (root.BenchFit) root.BenchFit.soon(); }
-  root.PlasmaBench = { state: function () { return S; }, render: renderAll, KEY: KEY };
+  // chain summary for the fullscreen visualisation (js/bench-fs.js): same data, same status rules as the cards
+  function summary() {
+    S = load();   // re-read the device store so the view always shows the latest saved readings
+    return D.chain.map(function (sid) { var st = D.stages[sid], f = fieldOf(sid, st.primary), L = latest(sid, f.id), c = L ? compare(f, L.v, tol(sid)) : null;
+      return { sid: sid, name: st.name, short: st.short, unknown: !!st.unknown, label: f.label, unit: f.unit, kind: f.kind || '', src: f.src || '',
+        model: f.pred != null ? fmtPred(f, f.pred) : 'no model value yet', best: f.best != null ? fmtPred(f, f.best) : null,
+        measured: L ? fmtPred(f, L.v) : null, dev: c ? c.dev : null, st: c ? c.st : (L ? 'info' : 'none'), stage: stageStatus(sid).st }; });
+  }
+  root.PlasmaBench = { state: function () { return S; }, render: renderAll, KEY: KEY, summary: summary, colors: CC };
   $('pb-tolnote').textContent = D.tolNote;
   wireData(); renderAll();
   var rq = 0; addEventListener('resize', function () { if (!rq) rq = requestAnimationFrame(function () { rq = 0; drawChain(); }); });

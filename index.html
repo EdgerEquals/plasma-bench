@@ -14,7 +14,8 @@
 <script src="js/load-tiers.js?v=5"></script><script>LoadTiers.script("js/phi-adapt.js?v=1",2,{first:true,id:"phi-adapt"})</script><!-- load tiers 0-3 + on-device usage feedback (adaptive principle 1 and 3) -->
 <script src="js/ratio-pump.js?v=2" data-site="bench" data-freq="0.75" data-lite="1"></script><!-- ratio pump + site frequency dial 0.75 -->
 <link rel="stylesheet" href="css/dad-palette.css?v=2">
-<link rel="stylesheet" href="css/bench.css?v=1">
+<link rel="stylesheet" href="css/bench.css?v=2">
+<link rel="stylesheet" href="css/bench-fs.css?v=1">
 </head>
 <body>
 <video class="bgloop" id="bgloop" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture data-poster="media/space-loop-poster.webp?v=4" data-src-webm="media/space-loop.webm?v=4" data-src-mp4="media/space-loop.mp4?v=4" data-poster-land="media/space-loop-land-poster.webp?v=2" data-src-webm-land="media/space-loop-land.webm?v=2" data-src-mp4-land="media/space-loop-land.mp4?v=2"></video><div class="bgloop-still" aria-hidden="true"></div>
@@ -22,7 +23,7 @@
 <div class="rain" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <header class="q-head dad-head" id="q-head">
   <div class="qh-top"><div class="qh-c">
-    <img class="pb-mark" src="img/bench-mark.svg?v=1" alt="" width="36" height="36">
+    <button type="button" class="pb-zoom" id="pb-zoom" data-guard="mark" aria-label="Open the bench chain visualisation, fullscreen" aria-haspopup="dialog"><img class="pb-mark" src="img/bench-mark.svg?v=2" alt="" width="36" height="36"></button>
     <div class="dh-title">Plasma Ignition Test Bench<small>2SPI · two-stage plasma ignition · GX120</small></div>
     <span class="qh-right">
       <span class="pb-pill rev" title="Model: Rev C, Design-out by margin"><i></i>Rev C</span>
@@ -81,7 +82,7 @@
 </footer>
 <script src="js/bench-data.js?v=1" defer></script>
 <script src="js/bench-windows.js?v=1" defer></script>
-<script src="js/bench.js?v=1" defer></script><!-- tier 1: bench cards, chart, fit -->
+<script src="js/bench.js?v=2" defer></script><script src="js/bench-fs.js?v=1" defer></script><!-- tier 1: bench cards, chart, fit -->
 <script>LoadTiers.script("js/phi-pumps.js?v=1",2,{id:"pumps",w:6.2});LoadTiers.script("js/matrix-rain.js?v=1",2,{last:true,id:"rain"});LoadTiers.script("js/vortex-stars.js?v=1",2,{last:true,id:"vortex"})</script><!-- tier 2 idle: pump root, matrix rain, star vortex -->
 </body>
 </html>

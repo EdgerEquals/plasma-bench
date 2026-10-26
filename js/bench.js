@@ -152,7 +152,7 @@
     return box;
   }
   // ---------- chain chart (canvas, no libraries) ----------
-  var CC = { none: '#5C7378', info: '#8FA9AE', green: '#3DDC84', amber: '#F2A541', red: '#E5484D' };
+  var CC = { none: '#2A3E4E', info: '#6A8CA4', green: '#00FF41', amber: '#F2A541', red: '#FF4D4D' };
   function drawChain() {
     var cv = $('pb-chart'); if (!cv || !cv.getContext) return;
     var w = cv.clientWidth || 300, h = Math.round(w / PHI), dpr = Math.min(2, root.devicePixelRatio || 1);
@@ -167,23 +167,23 @@
     function X(i) { return L0 + pw * (i + 0.5) / pts.length; } function Y(v) { return T0 + ph * (1 - (v - ymin) / (ymax - ymin)); }
     x.font = '10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace'; x.textBaseline = 'middle';
     // axis + grid
-    x.strokeStyle = 'rgba(78,170,190,.25)'; x.fillStyle = '#A9C3C8'; x.lineWidth = 1;
+    x.strokeStyle = 'rgba(20,58,87,.9)'; x.fillStyle = '#6A8CA4'; x.lineWidth = 1;
     [ymin, 1, ymax].concat([0.5, 1.5].filter(function (v) { return v > ymin && v < ymax; })).forEach(function (v) { x.beginPath(); x.moveTo(L0, Y(v)); x.lineTo(w - R0, Y(v)); x.stroke(); x.textAlign = 'right'; x.fillText(v.toFixed(2), L0 - 4, Y(v)); });
     // per-stage tolerance bands around the model (1.0 or the worst..best bracket)
     pts.forEach(function (p, i) { var bw = pw / pts.length * 0.62, t = p.t / 100;
       x.fillStyle = 'rgba(242,165,65,.13)'; x.fillRect(X(i) - bw / 2, Y(p.hi * (1 + t * PHI)), bw, Y(p.lo * (1 - t * PHI)) - Y(p.hi * (1 + t * PHI)));
-      x.fillStyle = 'rgba(61,220,132,.16)'; x.fillRect(X(i) - bw / 2, Y(p.hi * (1 + t)), bw, Y(p.lo * (1 - t)) - Y(p.hi * (1 + t)));
-      if (p.hi > p.lo) { x.fillStyle = 'rgba(214,236,239,.35)'; x.fillRect(X(i) - 2, Y(p.hi), 4, Y(p.lo) - Y(p.hi)); } });
+      x.fillStyle = 'rgba(0,255,65,.12)'; x.fillRect(X(i) - bw / 2, Y(p.hi * (1 + t)), bw, Y(p.lo * (1 - t)) - Y(p.hi * (1 + t)));
+      if (p.hi > p.lo) { x.fillStyle = 'rgba(157,188,206,.35)'; x.fillRect(X(i) - 2, Y(p.hi), 4, Y(p.lo) - Y(p.hi)); } });
     // model line (predicted = 1.0)
-    x.setLineDash([4, 3]); x.strokeStyle = '#D6ECEF'; x.beginPath(); x.moveTo(X(0), Y(1)); x.lineTo(X(pts.length - 1), Y(1)); x.stroke(); x.setLineDash([]);
-    pts.forEach(function (p, i) { x.fillStyle = '#D6ECEF'; x.beginPath(); x.arc(X(i), Y(1), 2.5, 0, 7); x.fill(); });
+    x.setLineDash([4, 3]); x.strokeStyle = '#0AF2FF'; x.beginPath(); x.moveTo(X(0), Y(1)); x.lineTo(X(pts.length - 1), Y(1)); x.stroke(); x.setLineDash([]);
+    pts.forEach(function (p, i) { x.fillStyle = '#0AF2FF'; x.beginPath(); x.arc(X(i), Y(1), 2.5, 0, 7); x.fill(); });
     // measured
-    x.strokeStyle = 'rgba(246,235,217,.6)'; x.beginPath(); var started = false;
+    x.strokeStyle = 'rgba(157,188,206,.6)'; x.beginPath(); var started = false;
     pts.forEach(function (p, i) { if (!p.c) return; if (!started) { x.moveTo(X(i), Y(p.c.ratio)); started = true; } else x.lineTo(X(i), Y(p.c.ratio)); }); x.stroke();
-    pts.forEach(function (p, i) { if (!p.c) return; x.fillStyle = CC[p.c.st]; x.beginPath(); x.arc(X(i), Y(p.c.ratio), 5, 0, 7); x.fill(); x.strokeStyle = '#0B1215'; x.stroke(); });
+    pts.forEach(function (p, i) { if (!p.c) return; x.fillStyle = CC[p.c.st]; x.beginPath(); x.arc(X(i), Y(p.c.ratio), 5, 0, 7); x.fill(); x.strokeStyle = '#000000'; x.stroke(); });
     // labels
-    x.fillStyle = '#F6EBD9'; x.textAlign = 'center';
-    pts.forEach(function (p, i) { x.fillText(p.st.short, X(i), h - B0 + 10); x.fillStyle = p.c ? CC[p.c.st] : '#5C7378'; x.fillText(p.c ? (p.c.dev >= 0 ? '+' : '') + p.c.dev.toFixed(0) + '%' : '–', X(i), h - B0 + 23); x.fillStyle = '#F6EBD9'; });
+    x.fillStyle = '#9DBCCE'; x.textAlign = 'center';
+    pts.forEach(function (p, i) { x.fillText(p.st.short, X(i), h - B0 + 10); x.fillStyle = p.c ? CC[p.c.st] : '#2A3E4E'; x.fillText(p.c ? (p.c.dev >= 0 ? '+' : '') + p.c.dev.toFixed(0) + '%' : '–', X(i), h - B0 + 23); x.fillStyle = '#9DBCCE'; });
     // text twin for screen readers
     var sr = $('pb-chart-sr'); if (sr) sr.textContent = pts.map(function (p) { return p.st.name + ': ' + (p.c ? 'measured ' + fmt(p.c.ratio) + '× model, ' + STLBL[p.c.st] : 'not measured'); }).join('. ');
     var key = $('pb-chart-key'); if (key) { key.textContent = ''; pts.forEach(function (p) { var d = el('div', 'pb-kr'); d.appendChild(el('b', null, p.st.short + ' ')); d.appendChild(el('span', null, p.f.label + ' · model ' + fmtPred(p.f, p.f.pred) + (p.L ? ' · measured ' + fmtPred(p.f, p.L.v) : ''))); key.appendChild(d); }); }

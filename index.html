@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-visual">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#000000">
+<style>:root{color-scheme:dark}html,body{background-color:#000;height:100%;overflow:hidden;overscroll-behavior:none}body{position:fixed;top:0;right:0;bottom:0;left:0;margin:0}#q-head.q-head{position:fixed;top:0;left:0;right:0}#q-head.q-head,#foot.foot{touch-action:none}.lt-wait *,.lt-wait *::before,.lt-wait *::after{animation-play-state:paused!important}</style><!-- shell from the dashboard (fixedchrome): body pinned, header and footer fixed, only #home-main scrolls; animations paused until tier 2 -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Plasma Ignition Test Bench</title>
+<link rel="icon" href="img/bench-mark.svg" type="image/svg+xml">
+<script src="js/phi-sun.js?v=2"></script><script src="js/phi-axes.js?v=1" defer></script><!-- rule 13 shared Sun anchor (video object-position) + the two diagonal axes the star streaks ride -->
+<script src="js/phi-timing.js?v=1"></script><!-- phi timing ladder (rules: ~/.config/phi-timing-rules.md) -->
+<script src="js/load-tiers.js?v=5"></script><script>LoadTiers.script("js/phi-adapt.js?v=1",2,{first:true,id:"phi-adapt"})</script><!-- load tiers 0-3 + on-device usage feedback (adaptive principle 1 and 3) -->
+<script src="js/ratio-pump.js?v=2" data-site="bench" data-freq="0.75" data-lite="1"></script><!-- ratio pump + site frequency dial 0.75 -->
+<link rel="stylesheet" href="css/dad-palette.css?v=2">
+<link rel="stylesheet" href="css/bench.css?v=1">
+</head>
+<body>
+<video class="bgloop" id="bgloop" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture data-poster="media/space-loop-poster.webp?v=4" data-src-webm="media/space-loop.webm?v=4" data-src-mp4="media/space-loop.mp4?v=4" data-poster-land="media/space-loop-land-poster.webp?v=2" data-src-webm-land="media/space-loop-land.webm?v=2" data-src-mp4-land="media/space-loop-land.mp4?v=2"></video><div class="bgloop-still" aria-hidden="true"></div>
+<script>(function(){var v=document.getElementById('bgloop'),rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)');function sync(){if((rm&&rm.matches)||document.hidden){v.pause();}else{var p=v.play();if(p&&p.catch)p.catch(function(){});}}v.muted=true;/* landscape screens get the landscape render (Uranus and Saturn cross inside the frame; Danny 12:46), portrait the v3 loop */var lm=window.matchMedia&&matchMedia('(orientation: landscape)');function sfx(){return lm&&lm.matches?'-land':''}function pick(){v.poster=v.getAttribute('data-poster'+sfx());if(!v.getAttribute('data-on'))return;var t0=v.currentTime;while(v.firstChild)v.removeChild(v.firstChild);[['webm','video/webm'],['mp4','video/mp4']].forEach(function(t){var s=document.createElement('source');s.src=v.getAttribute('data-src-'+t[0]+sfx());s.type=t[1];v.appendChild(s);});v.load();v.currentTime=t0;sync();}pick();if(lm&&lm.addEventListener)lm.addEventListener('change',pick);function go(){if(v.getAttribute('data-on'))return;v.setAttribute('data-on','1');v.preload='auto';pick();document.addEventListener('visibilitychange',sync);if(rm&&rm.addEventListener)rm.addEventListener('change',sync);sync();}/* space loop video starts after load, when idle (poster shows until then; Danny t713u lighter load) */if(window.LoadTiers)LoadTiers.add(2,go,'space-loop video',{id:'space',w:141.3});else addEventListener('load',go);window.__bgloopGo=go;})();</script>
+<div class="rain" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<header class="q-head dad-head" id="q-head">
+  <div class="qh-top"><div class="qh-c">
+    <img class="pb-mark" src="img/bench-mark.svg?v=1" alt="" width="36" height="36">
+    <div class="dh-title">Plasma Ignition Test Bench<small>2SPI · two-stage plasma ignition · GX120</small></div>
+    <span class="qh-right">
+      <span class="pb-pill rev" title="Model: Rev C, Design-out by margin"><i></i>Rev C</span>
+      <span class="pb-pill idle" id="hstat" role="status" aria-live="polite"><i></i><span id="hs-l">no data</span></span>
+      <span class="pb-pill warn" title="Open unknowns not yet within margin"><i></i><span id="hs-open">3 open</span></span>
+    </span>
+  </div></div>
+  <div class="qh-mast"><div class="qh-c">Model vs bench, stop by stop. <b>Bank 5.63 kV · 63.2 nF · 1.0 J</b> · saved on this device only</div></div>
+</header>
+<main class="wrap" id="home-main">
+  <section class="hw" aria-label="Test bench">
+    <div class="hw-w pb-intro" id="pb-intro">
+      <h1 class="pb-sec-h">Model vs bench</h1>
+      <p>Each card shows the Rev C model value, its kind (<b>SIMULATED</b>, <b>HAND</b> or <b>MODEL INPUT</b>) and source line (R = sim/RevC_reply.md, M = sim/RevC_design_out_by_margin.md). Type a measurement, tap <b>Log entry</b>. Green = within tolerance, amber = within tolerance × φ, red = beyond.</p>
+      <p class="pb-dim" id="pb-tolnote"></p>
+    </div>
+  </section>
+  <section class="hw" id="pb-cards" aria-label="Bench stops" data-guard="cards"></section>
+  <section class="hw" aria-label="Chain chart">
+    <div class="hw-w" id="pb-chain" data-guard="chain">
+      <h2 class="pb-sec-h">Chain: measured ÷ model</h2>
+      <canvas id="pb-chart" role="img" aria-describedby="pb-chart-sr"></canvas>
+      <p class="sr" id="pb-chart-sr"></p>
+      <div class="pb-legend"><span><i style="background:#D6ECEF"></i>model = 1.0 (bar = worst..best)</span><span><i style="background:rgba(61,220,132,.5)"></i>± tolerance</span><span><i style="background:rgba(242,165,65,.45)"></i>± tolerance × φ</span></div>
+      <div id="pb-chart-key"></div>
+    </div>
+  </section>
+  <section class="hw" aria-label="Planned tests">
+    <div class="hw-w" id="pb-plan" data-guard="plan">
+      <h2 class="pb-sec-h">First planned tests</h2>
+      <div id="pb-plan-list"></div>
+    </div>
+  </section>
+  <section class="hw" aria-label="Data">
+    <div class="hw-w" id="pb-data" data-guard="data">
+      <h2 class="pb-sec-h">Your data</h2>
+      <p class="pb-dim">Everything stays in this browser (localStorage). Export a JSON file to keep a copy or move it to another device.</p>
+      <div class="pb-data-row">
+        <button type="button" class="pb-btn" id="pb-export">Export JSON</button>
+        <label class="pb-btn pb-sec pb-file">Import JSON<input type="file" id="pb-import" accept="application/json,.json"></label>
+        <button type="button" class="pb-btn pb-warnbtn" id="pb-clear">Clear all</button>
+      </div>
+      <p class="pb-msg" id="pb-data-msg" aria-live="polite"></p>
+    </div>
+  </section>
+</main>
+<footer class="foot" id="foot">
+  <div class="strip" aria-label="Bench status">
+    <span class="lt" id="ltStops" style="--lp:var(--phi-light-a);--ld:var(--phi-light-a-d)"><i></i>STOPS <b id="vStops">0/6</b></span>
+    <span class="lt" id="ltGreen" style="--lp:var(--phi-light-b);--ld:var(--phi-light-b-d);--lc:#3DDC84"><i></i>GREEN <b id="vGreen">0</b></span>
+    <span class="lt" id="ltOff" style="--lp:var(--phi-light-c);--ld:var(--phi-light-c-d)"><i></i>OFF <b id="vOff">0</b></span>
+    <span class="lt" id="ltLog" style="--lp:var(--phi-light-d);--ld:var(--phi-light-d-d)"><i></i>LOG <b id="vLog">0</b></span>
+    <span class="lt" id="ltSave"><i></i>SAVE <b id="vSave">device</b></span>
+  </div>
+  <div class="note">Rev C model · nothing leaves this device · no server, no keys</div>
+</footer>
+<script src="js/bench-data.js?v=1" defer></script>
+<script src="js/bench-windows.js?v=1" defer></script>
+<script src="js/bench.js?v=1" defer></script><!-- tier 1: bench cards, chart, fit -->
+<script>LoadTiers.script("js/phi-pumps.js?v=1",2,{id:"pumps",w:6.2});LoadTiers.script("js/matrix-rain.js?v=1",2,{last:true,id:"rain"});LoadTiers.script("js/vortex-stars.js?v=1",2,{last:true,id:"vortex"})</script><!-- tier 2 idle: pump root, matrix rain, star vortex -->
+</body>
+</html>
